@@ -239,14 +239,41 @@ it('should mock the same request multiple times', async () => {
   })
 })
 
+it('should mock a request including its body params', async () => {
+  const body = JSON.stringify({ ramon: true })
+  http('http://my.host/')
+    .get('my-resource-path/1/')
+    .times(2)
+    .response((req, res) => {
+      if (req.body.ramon) {
+        return res
+        .json({
+          id: 1,
+          name: 'Jane Doe',
+        })
+      }
+
+      return res.json()
+    })
+
+  const firstsResponse = await (await fetch('http://my.host/my-resource-path/1/', { body })).json()
+  const secondResponse = await (await fetch('http://my.host/my-resource-path/1/')).json()
+
+  expect(firstsResponse).toEqual({
+    id: 1,
+    name: 'Jane Doe',
+  })
+  expect(secondResponse).not.toBeDefined()
+})
+
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
 // it('should mock a request including its url params')
-// it('should mock a request including its body params')
 // it('should mock a request including its headers')
 // it('should mock a blob response body')
 // it('should mock a text response body')
 // it('should mock an arrayBuffer response body')
 // it('should mock different requests by chaining them')
 // it('should mock the same request multiple times responding differently', async () => {
+// it('should mock a request failing because of network issues')

@@ -36,26 +36,54 @@ const http = options => {
       Mocks.add(request, { ...response, json })
       mockFetch()
     },
-    response: fn => {
-      const req = {}
-      const res = {
-        status: status => {
-          options = { ...options, response: { ...options.response, status } }
-          return res
-        },
-        headers: headers => {
-          options = { ...options, response: { ...options.response, headers } }
-          return res
-        },
-        json: json => ({ ...options, response: { ...options.response, json } })
-      }
-
-      const { request, response } = fn(req, res)
-
-      Mocks.add(request, response)
-      mockFetch()
+    response(responseCreator) {
+      window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
+        const { response } = responseCreator(getReq(requestOptions), getRes(options))
+        Mocks.add(options.request, response)
+        return findMatchingResponse(url, requestOptions)
+      })
     }
   }
+}
+
+const getReq = requestOptions => ({ body: getRequestBody(requestOptions) })
+
+const getRes = options => {
+  const res = {
+    status: status => {
+      options = { ...options, response: { ...options.response, status } }
+      return res
+    },
+    headers: headers => {
+      options = { ...options, response: { ...options.response, headers } }
+      return res
+    },
+    json: json => ({ ...options, response: { ...options.response, json } }),
+  }
+  return res
+}
+
+function findMatchingResponse(url, requestOptions) {
+  const request = { ...requestOptions, url }
+  if (!Mocks.has(request)) {
+    return Response.DEFAULT
+  }
+
+  const response = Mocks.get(request)
+  if (response.times === 0) {
+    return Response.DEFAULT
+  }
+
+  Mocks.add(request, { ...response, times: response.times - 1 })
+  return Response.create(response)
+}
+
+function getRequestBody(requestOptions = {}) {
+  if (!requestOptions.body) {
+    return {}
+  }
+
+  return JSON.parse(requestOptions.body)
 }
 
 afterEach(Mocks.clear)
