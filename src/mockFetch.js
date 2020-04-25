@@ -1,50 +1,19 @@
 import { Response } from './Response'
+import { Mocks } from './Mocks'
 
-class Mocks {
-  constructor() {
-    this.list = new Map()
-  }
-
-  clear() {
-    this.list.clear()
-  }
-
-  get(request) {
-    const { url, method = 'GET' } = request
-
-    return this.list.get(`${url}-${method}`)
-  }
-
-  add(request, response) {
-    const { url, host, path, method = 'GET' } = request
-    const { json, status = 200, headers, times = 1 } = response
-    const uri = url ? url : `${host}${path}`
-
-    this.list.set(`${uri}-${method}`, { json, status, headers, times })
-  }
-
-  has(request) {
-    const { url, method = 'GET' } = request
-
-    return this.list.has(`${url}-${method}`)
-  }
-}
-
-const mocks = new Mocks()
-
-const mockFetch = mocks => {
+const mockFetch = () => {
   window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
     const request = { ...requestOptions, url }
-    if (!mocks.has(request)) {
+    if (!Mocks.has(request)) {
       return Response.DEFAULT
     }
 
-    const response = mocks.get(request)
+    const response = Mocks.get(request)
     if (response.times === 0) {
       return Response.DEFAULT
     }
 
-    mocks.add(request, { ...response, times: response.times - 1 })
+    Mocks.add(request, { ...response, times: response.times - 1 })
     return Response.create(response)
   })
 }
@@ -64,8 +33,8 @@ const http = options => {
     json: json => {
       const { request, response } = options
 
-      mocks.add(request, { ...response, json })
-      mockFetch(mocks)
+      Mocks.add(request, { ...response, json })
+      mockFetch()
     },
     response: fn => {
       const req = {}
@@ -83,12 +52,12 @@ const http = options => {
 
       const { request, response } = fn(req, res)
 
-      mocks.add(request, response)
-      mockFetch(mocks)
+      Mocks.add(request, response)
+      mockFetch()
     }
   }
 }
 
-afterEach(() => mocks.clear())
+afterEach(Mocks.clear)
 
 export { http }
