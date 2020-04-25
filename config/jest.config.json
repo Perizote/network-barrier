@@ -1,0 +1,7 @@
+{
+  "rootDir": "..",
+  "setupFiles": ["<rootDir>/config/polyfills.js"],
+  "setupFilesAfterEnv": ["<rootDir>/config/jest.setup.js"],
+  "testMatch": [ "<rootDir>/**/?(*.)(test).js" ],
+  "moduleFileExtensions": ["js", "json"]
+}
