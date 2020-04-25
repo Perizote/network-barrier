@@ -1,0 +1,36 @@
+{
+  "name": "mock-fetch",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --ci --coverage --config config/jest.config.json",
+    "test:watch": "jest --watchAll --config config/jest.config.json"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.0",
+    "@babel/plugin-transform-runtime": "^7.5.0",
+    "@babel/preset-env": "^7.5.4",
+    "@testing-library/jest-dom": "^4.2.0",
+    "jest": "24.8.0",
+    "babel-jest": "^24.8.0"
+  },
+  "peerDependencies": {
+    "jest": "*"
+  },
+  "keywords": [],
+  "babel": {
+    "presets": [
+      "@babel/env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime",
+      "@babel/proposal-class-properties"
+    ]
+  }
+}
