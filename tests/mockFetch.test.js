@@ -182,24 +182,6 @@ it('should mock the same request one single time by default', async () => {
   expect(secondResponse).not.toBeDefined()
 })
 
-// it('should mock the same request multiple times responding differently', async () => {
-//   // http('http://my.host/')
-//   //   .post('my-resource-path/1/')
-//   //   .response({ msg: 'success' })
-
-//     const firstResponse = await (await fetch('http://my.host/my-resource-path/1/')).json()
-//     const secondResponse = await (await fetch('http://my.host/my-resource-path/1/')).json()
-
-//     expect(firstResponse).toEqual({
-//       id: 1,
-//       result: [],
-//     })
-//     expect(secondResponse).toEqual({
-//       id: 1,
-//       name: 'Jane Doe',
-//     })
-// })
-
 it('should mock the response of a request', async () => {
   http('http://my.host/')
     .post('my-resource-path/')
@@ -267,3 +249,4 @@ it('should mock the same request multiple times', async () => {
 // it('should mock a text response body')
 // it('should mock an arrayBuffer response body')
 // it('should mock different requests by chaining them')
+// it('should mock the same request multiple times responding differently', async () => {

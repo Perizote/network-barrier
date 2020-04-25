@@ -1,3 +1,5 @@
+import { Response } from './Response'
+
 class Mocks {
   constructor() {
     this.list = new Map()
@@ -29,16 +31,6 @@ class Mocks {
 }
 
 const mocks = new Mocks()
-
-const Response = {
-  DEFAULT: Promise.resolve({ json: () => Promise.resolve() }),
-  create: response => Promise.resolve({
-    json: () => Promise.resolve(response.json),
-    status: response.status,
-    headers: new Headers(response.headers),
-    ok: response.status >= 200 && response.status <= 299,
-  })
-}
 
 const mockFetch = mocks => {
   window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
