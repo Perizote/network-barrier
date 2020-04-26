@@ -11,6 +11,7 @@ const http = options => {
     get: path => http({ ...options, request: { ...options.request, path } }),
     post: path => http({ ...options, request: { ...options.request, path, method: 'POST' } }),
     put: path => http({ ...options, request: { ...options.request, path, method: 'PUT' } }),
+    patch: path => http({ ...options, request: { ...options.request, path, method: 'PATCH' } }),
     status: status => http({ ...options, response: { ...options.response, status } }),
     headers: headers => http({ ...options, response: { ...options.response, headers } }),
     times: times => http({ ...options, response: { ...options.response, times } }),

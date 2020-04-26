@@ -313,6 +313,22 @@ it('should mock a put request', async () => {
   })
 })
 
+it('should mock a patch request', async () => {
+  http('http://my.host/')
+    .patch('my-resource-path/1/')
+    .json({
+      id: 1,
+      surname: 'Peris',
+    })
+
+  const response = await (await fetch('http://my.host/my-resource-path/1/', { method: 'PATCH' })).json()
+
+  expect(response).toEqual({
+    id: 1,
+    surname: 'Peris',
+  })
+})
+
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
