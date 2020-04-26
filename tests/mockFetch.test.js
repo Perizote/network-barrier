@@ -345,11 +345,29 @@ it('should mock a delete request', async () => {
   })
 })
 
+it('should mock a blob response body', async () => {
+  const readFileAsync = file => new Promise(resolve => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.readAsText(file)
+  })
+  http('http://my.host/')
+    .get('my-resource-path/1/file.pdf')
+    .blob(new Blob(
+      [ 'the content of my pdf file' ],
+      { type : 'application/pdf' }
+    ))
+
+  const pdfFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
+  const fileContent = await readFileAsync(pdfFile)
+
+  expect(fileContent).toBe('the content of my pdf file')
+})
+
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
 // it('should mock a request including its url params')
-// it('should mock a blob response body')
 // it('should mock a text response body')
 // it('should mock an arrayBuffer response body')
 // it('should mock different requests by chaining them')
