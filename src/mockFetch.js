@@ -1,6 +1,13 @@
 import { Response } from './Response'
 import { Mocks } from './Mocks'
 
+const HTTP_METHODS = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+}
+
 const http = options => {
   const isHost = !options.request && typeof options === 'string'
   if (isHost) {
@@ -8,10 +15,10 @@ const http = options => {
   }
 
   return {
-    get: path => http({ ...options, request: { ...options.request, path } }),
-    post: path => http({ ...options, request: { ...options.request, path, method: 'POST' } }),
-    put: path => http({ ...options, request: { ...options.request, path, method: 'PUT' } }),
-    patch: path => http({ ...options, request: { ...options.request, path, method: 'PATCH' } }),
+    get: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.GET } }),
+    post: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.POST } }),
+    put: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.PUT } }),
+    patch: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.PATCH } }),
     status: status => http({ ...options, response: { ...options.response, status } }),
     headers: headers => http({ ...options, response: { ...options.response, headers } }),
     times: times => http({ ...options, response: { ...options.response, times } }),
