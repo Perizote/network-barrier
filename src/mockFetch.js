@@ -32,7 +32,7 @@ const http = options => {
     },
     response(responseCreator) {
       window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
-        const { response } = responseCreator(getReq(requestOptions), getRes(options))
+        const response = responseCreator(getReq(requestOptions), getRes(options.response))
         Mocks.add(options.request, response)
         return findMatchingResponse(url, requestOptions)
       })
@@ -45,21 +45,11 @@ const getReq = (requestOptions = {}) => ({
   headers: getRequestHeaders(requestOptions),
 })
 
-function getRes(options) {
-  const res = {
-    status: status => {
-      options = { ...options, response: { ...options.response, status } }
-      return res
-    },
-    headers: headers => {
-      options = { ...options, response: { ...options.response, headers } }
-      return res
-    },
-    json: json => ({ ...options, response: { ...options.response, json } }),
-  }
-
-  return res
-}
+const getRes = response => ({
+  status: status => getRes({ ...response, status }),
+  headers: headers => getRes({ ...response, headers }),
+  json: json => ({ ...response, json }),
+})
 
 function findMatchingResponse(url, requestOptions) {
   const request = { ...requestOptions, url }
