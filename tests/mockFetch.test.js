@@ -297,6 +297,22 @@ it('should mock a request including its headers', async () => {
   expect(responseWithoutRequestHeaders).not.toBeDefined()
 })
 
+it('should mock a put request', async () => {
+  http('http://my.host/')
+    .put('my-resource-path/1/')
+    .json({
+      id: 1,
+      name: 'Sergio',
+    })
+
+  const response = await (await fetch('http://my.host/my-resource-path/1/', { method: 'PUT' })).json()
+
+  expect(response).toEqual({
+    id: 1,
+    name: 'Sergio',
+  })
+})
+
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
@@ -307,5 +323,7 @@ it('should mock a request including its headers', async () => {
 // it('should mock different requests by chaining them')
 // it('should mock the same request multiple times responding differently', async () => {
 // it('should mock a request failing because of network issues')
+
 // what about headers being passed by doing new Headers
 // what about passing a Request object as firsts fetch param instead of a string url
+// should request body & headers be null if not specified instead of setting it as an empty object?
