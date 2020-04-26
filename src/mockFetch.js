@@ -6,6 +6,7 @@ const HTTP_METHODS = {
   POST: 'POST',
   PUT: 'PUT',
   PATCH: 'PATCH',
+  DELETE: 'DELETE',
 }
 
 const http = options => {
@@ -19,6 +20,7 @@ const http = options => {
     post: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.POST } }),
     put: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.PUT } }),
     patch: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.PATCH } }),
+    delete: path => http({ ...options, request: { ...options.request, path, method: HTTP_METHODS.DELETE } }),
     status: status => http({ ...options, response: { ...options.response, status } }),
     headers: headers => http({ ...options, response: { ...options.response, headers } }),
     times: times => http({ ...options, response: { ...options.response, times } }),

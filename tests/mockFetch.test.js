@@ -329,6 +329,22 @@ it('should mock a patch request', async () => {
   })
 })
 
+it('should mock a delete request', async () => {
+  http('http://my.host/')
+    .delete('my-resource-path/1/')
+    .json({
+      id: 1,
+      address: 'Rodrigo de Pertegas',
+    })
+
+  const response = await (await fetch('http://my.host/my-resource-path/1/', { method: 'DELETE' })).json()
+
+  expect(response).toEqual({
+    id: 1,
+    address: 'Rodrigo de Pertegas',
+  })
+})
+
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
