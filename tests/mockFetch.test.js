@@ -240,14 +240,12 @@ it('should mock the same request multiple times', async () => {
 })
 
 it('should mock a request including its body params', async () => {
-  const body = JSON.stringify({ ramon: true })
   http('http://my.host/')
-    .get('my-resource-path/1/')
+    .post('my-resource-path/')
     .times(2)
     .response((req, res) => {
-      if (req.body.ramon) {
-        return res
-        .json({
+      if (req.body.isAuth) {
+        return res.json({
           id: 1,
           name: 'Jane Doe',
         })
@@ -256,24 +254,58 @@ it('should mock a request including its body params', async () => {
       return res.json()
     })
 
-  const firstsResponse = await (await fetch('http://my.host/my-resource-path/1/', { body })).json()
-  const secondResponse = await (await fetch('http://my.host/my-resource-path/1/')).json()
+  const responseWithRequestBody = await (
+    await fetch('http://my.host/my-resource-path/', { method: 'POST', body: JSON.stringify({ isAuth: true }) })
+  ).json()
+  const responseWithoutRequestBody = await (
+    await fetch('http://my.host/my-resource-path/', { method: 'POST' })
+  ).json()
 
-  expect(firstsResponse).toEqual({
+  expect(responseWithRequestBody).toEqual({
     id: 1,
     name: 'Jane Doe',
   })
-  expect(secondResponse).not.toBeDefined()
+  expect(responseWithoutRequestBody).not.toBeDefined()
+})
+
+it('should mock a request including its headers', async () => {
+  http('http://my.host/')
+    .post('my-resource-path/')
+    .times(2)
+    .response((req, res) => {
+      if (req.headers.Authorization === 'Basic mytoken') {
+        return res.json({
+          id: 1,
+          name: 'John Doe',
+        })
+      }
+
+      return res.json()
+    })
+
+  const responseWithRequestHeaders = await (
+    await fetch('http://my.host/my-resource-path/', { method: 'POST', headers: { Authorization: 'Basic mytoken' } })
+  ).json()
+  const responseWithoutRequestHeaders = await (
+    await fetch('http://my.host/my-resource-path/', { method: 'POST' })
+  ).json()
+
+  expect(responseWithRequestHeaders).toEqual({
+    id: 1,
+    name: 'John Doe',
+  })
+  expect(responseWithoutRequestHeaders).not.toBeDefined()
 })
 
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
 // it('should mock a request including its url params')
-// it('should mock a request including its headers')
 // it('should mock a blob response body')
 // it('should mock a text response body')
 // it('should mock an arrayBuffer response body')
 // it('should mock different requests by chaining them')
 // it('should mock the same request multiple times responding differently', async () => {
 // it('should mock a request failing because of network issues')
+// what about headers being passed by doing new Headers
+// what about passing a Request object as firsts fetch param instead of a string url

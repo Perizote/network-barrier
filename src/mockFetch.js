@@ -29,7 +29,10 @@ const http = options => {
   }
 }
 
-const getReq = requestOptions => ({ body: getRequestBody(requestOptions) })
+const getReq = (requestOptions = {}) => ({
+  body: getRequestBody(requestOptions),
+  headers: getRequestHeaders(requestOptions),
+})
 
 function getRes(options) {
   const res = {
@@ -62,12 +65,20 @@ function findMatchingResponse(url, requestOptions) {
   return Response.create(response)
 }
 
-function getRequestBody(requestOptions = {}) {
+function getRequestBody(requestOptions) {
   if (!requestOptions.body) {
     return {}
   }
 
   return JSON.parse(requestOptions.body)
+}
+
+function getRequestHeaders(requestOptions) {
+  if (!requestOptions.headers) {
+    return {}
+  }
+
+  return requestOptions.headers
 }
 
 afterEach(Mocks.clear)
