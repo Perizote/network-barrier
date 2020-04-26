@@ -364,6 +364,28 @@ it('should mock a blob response body', async () => {
   expect(fileContent).toBe('the content of my pdf file')
 })
 
+it('should mock a blob response body of a request', async () => {
+  const readFileAsync = file => new Promise(resolve => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.readAsText(file)
+  })
+  http('http://my.host/')
+    .get('my-resource-path/1/file.pdf')
+    .response((req, res) =>
+      res
+        .blob(new Blob(
+          [ 'the content of my pdf file' ],
+          { type : 'application/pdf' }
+        ))
+    )
+
+  const pdfFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
+  const fileContent = await readFileAsync(pdfFile)
+
+  expect(fileContent).toBe('the content of my pdf file')
+})
+
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')

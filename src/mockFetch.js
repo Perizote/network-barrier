@@ -55,6 +55,7 @@ const getRes = response => ({
   status: status => getRes({ ...response, status }),
   headers: headers => getRes({ ...response, headers }),
   json: json => ({ ...response, json }),
+  blob: blob => ({ ...response, blob }),
 })
 
 function findMatchingResponse(url, requestOptions) {
