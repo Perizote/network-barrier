@@ -36,6 +36,12 @@ const http = options => {
       Mocks.add(request, { ...response, blob })
       window.fetch = jest.fn().mockImplementation(findMatchingResponse)
     },
+    text: text => {
+      const { request, response } = options
+
+      Mocks.add(request, { ...response, text })
+      window.fetch = jest.fn().mockImplementation(findMatchingResponse)
+    },
     response(responseCreator) {
       window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
         const response = responseCreator(getReq(requestOptions), getRes(options.response))
@@ -56,6 +62,7 @@ const getRes = response => ({
   headers: headers => getRes({ ...response, headers }),
   json: json => ({ ...response, json }),
   blob: blob => ({ ...response, blob }),
+  text: text => ({ ...response, text }),
 })
 
 function findMatchingResponse(url, requestOptions) {

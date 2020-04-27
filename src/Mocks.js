@@ -10,10 +10,10 @@ function get(request) {
 
 function add(request, response) {
   const { url, host, path, method = 'GET' } = request
-  const { json, blob, status = 200, headers, times = 1 } = response
+  const { json, blob, text, status = 200, headers, times = 1 } = response
   const uri = url ? url : `${host}${path}`
 
-  list.set(`${uri}-${method}`, { json, blob, status, headers, times })
+  list.set(`${uri}-${method}`, { json, blob, text, status, headers, times })
 }
 
 function has(request) {

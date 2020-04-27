@@ -1,4 +1,5 @@
 import { http } from '../src'
+import { readFileAsync } from './helpers'
 
 it('should mock a json response body', async () => {
   http('http://my.host/')
@@ -219,11 +220,10 @@ it('should mock the same request multiple times', async () => {
     .get('my-resource-path/1/')
     .times(2)
     .response((req, res) =>
-      res
-        .json({
-          id: 1,
-          result: [],
-        })
+      res.json({
+        id: 1,
+        result: [],
+      })
     )
 
   const firstResponse = await (await fetch('http://my.host/my-resource-path/1/')).json()
@@ -346,11 +346,6 @@ it('should mock a delete request', async () => {
 })
 
 it('should mock a blob response body', async () => {
-  const readFileAsync = file => new Promise(resolve => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result)
-    reader.readAsText(file)
-  })
   http('http://my.host/')
     .get('my-resource-path/1/file.pdf')
     .blob(new Blob(
@@ -365,19 +360,13 @@ it('should mock a blob response body', async () => {
 })
 
 it('should mock a blob response body of a request', async () => {
-  const readFileAsync = file => new Promise(resolve => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result)
-    reader.readAsText(file)
-  })
   http('http://my.host/')
     .get('my-resource-path/1/file.pdf')
     .response((req, res) =>
-      res
-        .blob(new Blob(
-          [ 'the content of my pdf file' ],
-          { type : 'application/pdf' }
-        ))
+      res.blob(new Blob(
+        [ 'the content of my pdf file' ],
+        { type : 'application/pdf' }
+      ))
     )
 
   const pdfFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
@@ -386,11 +375,45 @@ it('should mock a blob response body of a request', async () => {
   expect(fileContent).toBe('the content of my pdf file')
 })
 
+it('should mock a text response body', async () => {
+  http('http://my.host/')
+    .get('my-resource-path/1/file.txt')
+    .text(new File(
+      [ 'the content of my text file' ],
+      'file.txt',
+      { type: 'text/plain' }
+    ))
+
+
+  const textFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
+  const fileContent = await readFileAsync(textFile)
+
+  expect(textFile.name).toBe('file.txt')
+  expect(fileContent).toBe('the content of my text file')
+})
+
+it('should mock a text response body of a request', async () => {
+  http('http://my.host/')
+    .get('my-resource-path/1/file.txt')
+    .response((req, res) =>
+      res.text(new File(
+        [ 'the content of my text file' ],
+        'file.txt',
+        { type: 'text/plain' }
+      ))
+    )
+
+  const textFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
+  const fileContent = await readFileAsync(textFile)
+
+  expect(textFile.name).toBe('file.txt')
+  expect(fileContent).toBe('the content of my text file')
+})
+
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
 // it('should mock a request including its url params')
-// it('should mock a text response body')
 // it('should mock an arrayBuffer response body')
 // it('should mock different requests by chaining them')
 // it('should mock the same request multiple times responding differently', async () => {
