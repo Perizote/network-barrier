@@ -44,7 +44,7 @@ const http = options => {
     },
     response(responseCreator) {
       window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
-        const response = responseCreator(getReq(requestOptions), getRes(options.response))
+        const response = responseCreator(getReq(url, requestOptions), getRes(options.response))
         Mocks.add(options.request, response)
         return findMatchingResponse(url, requestOptions)
       })
@@ -52,10 +52,38 @@ const http = options => {
   }
 }
 
-const getReq = (requestOptions = {}) => ({
+const getReq = (url, requestOptions = {}) => ({
   body: getRequestBody(requestOptions),
   headers: getRequestHeaders(requestOptions),
+  queryParams: getQueryParams(url),
 })
+
+function getRequestBody(requestOptions) {
+  if (!requestOptions.body) {
+    return {}
+  }
+
+  return JSON.parse(requestOptions.body)
+}
+
+function getRequestHeaders(requestOptions) {
+  if (!requestOptions.headers) {
+    return {}
+  }
+
+  return requestOptions.headers
+}
+
+function getQueryParams(url) {
+  const { searchParams } = new URL(url)
+  const urlSearchParams = new URLSearchParams(searchParams)
+
+  return [ ...urlSearchParams.entries() ]
+    .reduce((queryParams, [ paramName, paramVAlue ]) => ({
+      ...queryParams,
+      [ paramName ]: paramVAlue
+    }), {})
+}
 
 const getRes = response => ({
   status: status => getRes({ ...response, status }),
@@ -78,22 +106,6 @@ function findMatchingResponse(url, requestOptions) {
 
   Mocks.add(request, { ...response, times: response.times - 1 })
   return Response.create(response)
-}
-
-function getRequestBody(requestOptions) {
-  if (!requestOptions.body) {
-    return {}
-  }
-
-  return JSON.parse(requestOptions.body)
-}
-
-function getRequestHeaders(requestOptions) {
-  if (!requestOptions.headers) {
-    return {}
-  }
-
-  return requestOptions.headers
 }
 
 afterEach(Mocks.clear)

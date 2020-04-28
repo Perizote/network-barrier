@@ -426,10 +426,28 @@ it('should ignore query string params when it comes to find matching requests', 
   })
 })
 
+it('should mock a request including its query string params', async () => {
+  http('http://my.host/')
+    .get('my-resource-path/')
+    .times(2)
+    .response((req, res) => {
+      if (req.queryParams.order === 'desc') {
+        return res.json([3, 2, 1])
+      }
+
+      return res.json([1, 2, 3])
+    })
+
+  const responseWithAscendingOrder = await (await fetch('http://my.host/my-resource-path/')).json()
+  const responseWithDescendingOrder = await (await fetch('http://my.host/my-resource-path/?order=desc')).json()
+
+  expect(responseWithAscendingOrder).toEqual([1, 2, 3])
+  expect(responseWithDescendingOrder).toEqual([3, 2, 1])
+})
+
 // it('should mocks a default response including empty text() & blob())
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
-// it('should mock a request including its query string params')
 // it('should mock an arrayBuffer response body')
 // it('should mock different requests by chaining them')
 // it('should mock the same request multiple times responding differently', async () => {
