@@ -4,8 +4,9 @@ const clear = () => list.clear()
 
 function get(request) {
   const { url, method = 'GET' } = request
+  const { origin, pathname } = new URL(url)
 
-  return list.get(`${url}-${method}`)
+  return list.get(`${origin}${pathname}-${method}`)
 }
 
 function add(request, response) {
@@ -18,8 +19,9 @@ function add(request, response) {
 
 function has(request) {
   const { url, method = 'GET' } = request
+  const { origin, pathname } = new URL(url)
 
-  return list.has(`${url}-${method}`)
+  return list.has(`${origin}${pathname}-${method}`)
 }
 
 const Mocks = { clear, get, add, has }

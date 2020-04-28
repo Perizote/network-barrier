@@ -410,10 +410,26 @@ it('should mock a text response body of a request', async () => {
   expect(fileContent).toBe('the content of my text file')
 })
 
+it('should ignore query string params when it comes to find matching requests', async () => {
+  http('http://my.host/')
+    .get('my-resource-path/1/')
+    .json({
+      id: 1,
+      name: 'Sergio',
+    })
+
+  const response = await (await fetch('http://my.host/my-resource-path/1/?queryStringParam=value')).json()
+
+  expect(response).toEqual({
+    id: 1,
+    name: 'Sergio',
+  })
+})
+
+// it('should mocks a default response including empty text() & blob())
 // it('should mock requests by passing a url wildcard')
 // it('should have set a default host')
 // it('should mock a request including its query string params')
-// it('should mock a request including its url params')
 // it('should mock an arrayBuffer response body')
 // it('should mock different requests by chaining them')
 // it('should mock the same request multiple times responding differently', async () => {
