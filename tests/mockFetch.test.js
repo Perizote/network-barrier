@@ -447,10 +447,10 @@ it('should mock a request including its query string params', async () => {
 
 it('should mock requests by passing a url wildcard', async () => {
   http('http://my.host/')
-    .get('my-resource-path/*/')
+    .get('my-resource-path/*')
     .json({ name: 'Sergio' })
 
-  const response = await (await fetch('http://my.host/my-resource-path/1/')).json()
+  const response = await (await fetch('http://my.host/my-resource-path/1/more-stuff/')).json()
 
   expect(response).toEqual({ name: 'Sergio' })
 })

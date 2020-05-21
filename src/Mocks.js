@@ -5,8 +5,8 @@ let list = new Map()
 const clear = () => list.clear()
 
 function get(request) {
-  const mockUrl = getURLMatchingRequest(request)
-  return list.get(mockUrl)
+  const key = getMockKeyMatchingRequest(request)
+  return list.get(key)
 }
 
 function add(request, response) {
@@ -14,27 +14,29 @@ function add(request, response) {
   const { json, blob, text, status = 200, headers, times = 1 } = response
   const uri = url ? url : `${ host }${ path }`
 
-  list.set(`${ uri }-${ method }`, { json, blob, text, status, headers, times })
+  list.set(JSON.stringify({ url: uri, method }), { json, blob, text, status, headers, times })
 }
 
 function has(request) {
-  const mockUrl = getURLMatchingRequest(request)
-  return list.has(mockUrl)
+  const key = getMockKeyMatchingRequest(request)
+  return list.has(key)
 }
 
-function getURLMatchingRequest(request) {
+function getMockKeyMatchingRequest(request) {
   const mock = [ ...list.entries() ]
-    .find(([ url ]) => requestMatchesURL(request, url))
+    .find(([ key ]) => keyIdentifiesRequest(request, JSON.parse(key)))
 
   if (!mock) return ''
   return mock[0]
 }
 
-function requestMatchesURL(request, fullURL) {
+function keyIdentifiesRequest(request, key) {
   const { url, method = 'GET' } = request
   const { origin, pathname } = new URL(url)
 
-  return compare(`${ origin }${ pathname }-${ method }`, fullURL)
+  if (key.method !== method) return false
+
+  return compare(`${ origin }${ pathname }`, key.url)
 }
 
 const Mocks = { clear, get, add, has }
