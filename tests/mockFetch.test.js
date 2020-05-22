@@ -455,10 +455,37 @@ it('should mock requests by passing a url wildcard', async () => {
   expect(response).toEqual({ name: 'Sergio' })
 })
 
+it('should mock different requests by chaining them', async () => {
+  http('http://my.host/')
+    .get('my-resource-path/1/file.json')
+    .json({ content: 'the content of my json file' })
+    .get('my-resource-path/1/file.txt')
+    .text(new File(
+      [ 'the content of my text file' ],
+      'file.txt',
+      { type: 'text/plain' }
+    ))
+    .get('my-resource-path/1/file.pdf')
+    .blob(new Blob(
+      [ 'the content of my pdf file' ],
+      { type : 'application/pdf' }
+    ))
+
+  const jsonFile = await (await fetch('http://my.host/my-resource-path/1/file.json')).json()
+  const textFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
+  const textFileContent = await readFileAsync(textFile)
+  const pdfFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
+  const pdfFileContent = await readFileAsync(pdfFile)
+
+  expect(jsonFile).toEqual({ content: 'the content of my json file' })
+  expect(textFile.name).toBe('file.txt')
+  expect(textFileContent).toBe('the content of my text file')
+  expect(pdfFileContent).toBe('the content of my pdf file')
+})
+
 // it('should mock a default response including empty text() & blob())
 // it('should have set a default host')
 // it('should mock the same request multiple times responding differently', async () => {
-// it('should mock different requests by chaining them')
 // it('should mock a request failing because of network issues')
 
 // what about headers being passed by doing new Headers

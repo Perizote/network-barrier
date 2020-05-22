@@ -29,18 +29,21 @@ const http = options => {
 
       Mocks.add(request, { ...response, json })
       window.fetch = jest.fn().mockImplementation(findMatchingResponse)
+      return http({ ...options, response: { ...options.response, json } })
     },
     blob: blob => {
       const { request, response } = options
 
       Mocks.add(request, { ...response, blob })
       window.fetch = jest.fn().mockImplementation(findMatchingResponse)
+      return http({ ...options, response: { ...options.response, blob } })
     },
     text: text => {
       const { request, response } = options
 
       Mocks.add(request, { ...response, text })
       window.fetch = jest.fn().mockImplementation(findMatchingResponse)
+      return http({ ...options, response: { ...options.response, text } })
     },
     response(responseCreator) {
       window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
