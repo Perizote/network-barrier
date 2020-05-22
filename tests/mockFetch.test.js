@@ -483,9 +483,26 @@ it('should mock different requests by chaining them', async () => {
   expect(pdfFileContent).toBe('the content of my pdf file')
 })
 
+it('should mock the same request multiple times responding differently', async () => {
+  const network = http('http://my.host/')
+    .get('my-resource-path/1/')
+    .status(400)
+    .json()
+  const firstResponse =  await fetch('http://my.host/my-resource-path/1/')
+
+  network.response((req, res) =>
+    res
+      .status(500)
+      .json()
+  )
+  const secondResponse = await fetch('http://my.host/my-resource-path/1/')
+
+  expect(firstResponse.status).toBe(400)
+  expect(secondResponse.status).toBe(500)
+})
+
 // it('should mock a default response including empty text() & blob())
 // it('should have set a default host')
-// it('should mock the same request multiple times responding differently', async () => {
 // it('should mock a request failing because of network issues')
 
 // what about headers being passed by doing new Headers
