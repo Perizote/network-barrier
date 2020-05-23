@@ -520,9 +520,28 @@ it('should mock a default response including default values', async () => {
   expect(response.ok).toBeTruthy()
 })
 
-// it('should mock a fetch call when using the Request API', () => {
+it('should mock a fetch call when using the Request API', async () => {
+  http('http://my.host/')
+    .get('my-resource-path/1/')
+    .json({ name: 'Sergio' })
+  http('http://my.host/')
+    .get('my-resource-path/2/')
+    .response((req, res) =>
+      res.json({ name: 'David' })
+    )
+
+  const request = new Request('http://my.host/my-resource-path/1/')
+  const firstResponse = await (await fetch(new Request('http://my.host/my-resource-path/1/'))).json()
+  const secondResponse = await (await fetch(new Request('http://my.host/my-resource-path/2/'))).json()
+
+  expect(firstResponse).toEqual({ name: 'Sergio' })
+  expect(secondResponse).toEqual({ name: 'David' })
+})
+
 // it('should have set a default host')
 // it('should have set a default headers')
 // it('should mock a request failing because of network issues')
 
-// what about passing a Request object as firsts fetch param instead of a string url
+// use Proxy API instead of jest.fn().mockImplementation so that we can remove jest peer dependency
+// use Deno instead of Node in order to have native fetch support so that we can get rid of node-fetch dependency and polyfills
+// find a better name (http sucks)

@@ -46,7 +46,8 @@ const http = options => {
       return http({ ...options, response: { ...options.response, text } })
     },
     response(responseCreator) {
-      window.fetch = jest.fn().mockImplementation(async (url, requestOptions) => {
+      window.fetch = jest.fn().mockImplementation(async (request, requestOptions) => {
+        const url = typeof request === 'string' ? request : request.url
         const response = responseCreator(getReq(url, requestOptions), getRes(options.response))
         Mocks.add(options.request, response)
         return findMatchingResponse(url, requestOptions)
@@ -96,18 +97,20 @@ const getRes = response => ({
   text: text => ({ ...response, text }),
 })
 
-function findMatchingResponse(url, requestOptions) {
-  const request = { ...requestOptions, url }
-  if (!Mocks.has(request)) {
+function findMatchingResponse(request, requestOptions) {
+  const url = typeof request === 'string' ? request : request.url
+  const mockedRequest = { ...requestOptions, url }
+
+  if (!Mocks.has(mockedRequest)) {
     return Response.DEFAULT
   }
 
-  const response = Mocks.get(request)
+  const response = Mocks.get(mockedRequest)
   if (response.times === 0) {
     return Response.DEFAULT
   }
 
-  Mocks.add(request, { ...response, times: response.times - 1 })
+  Mocks.add(mockedRequest, { ...response, times: response.times - 1 })
   return Response.create(response)
 }
 

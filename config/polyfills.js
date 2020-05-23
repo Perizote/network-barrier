@@ -1,3 +1,4 @@
-import { Headers } from 'node-fetch'
+import { Headers, Request } from 'node-fetch'
 
 global.Headers = Headers
+global.Request = Request
