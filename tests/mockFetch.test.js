@@ -502,31 +502,11 @@ it('should mock the same request multiple times responding differently', async (
 })
 
 it('should mock a default response including empty text() & blob()', async () => {
-  http('http://my.host/')
-    .get('my-resource-path/1/file.txt')
-    .text(new File(
-      [ 'the content of my text file' ],
-      'file.txt',
-      { type: 'text/plain' }
-    ))
-    .get('my-resource-path/1/file.pdf')
-    .blob(new Blob(
-      [ 'the content of my pdf file' ],
-      { type : 'application/pdf' }
-    ))
+  const textFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
+  const pdfFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
 
-  const firstTextFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
-  const textFileContent = await readFileAsync(firstTextFile)
-  const secondTextFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
-  const firstPDFFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
-  const pdfFileContent = await readFileAsync(firstPDFFile)
-  const secondPDFFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
-
-  expect(firstTextFile.name).toBe('file.txt')
-  expect(textFileContent).toBe('the content of my text file')
-  expect(secondTextFile).not.toBeDefined()
-  expect(pdfFileContent).toBe('the content of my pdf file')
-  expect(secondPDFFile).not.toBeDefined()
+  expect(textFile).not.toBeDefined()
+  expect(pdfFile).not.toBeDefined()
 })
 
 // it('should have set a default host')
@@ -534,4 +514,3 @@ it('should mock a default response including empty text() & blob()', async () =>
 
 // what about headers being passed by doing new Headers
 // what about passing a Request object as firsts fetch param instead of a string url
-// should request body & headers be null if not specified instead of setting it as an empty object?
