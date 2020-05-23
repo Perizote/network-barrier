@@ -1,4 +1,8 @@
-const DEFAULT = Promise.resolve({ json: () => Promise.resolve() })
+const DEFAULT = Promise.resolve({
+  json: () => Promise.resolve(),
+  text: () => Promise.resolve(),
+  blob: () => Promise.resolve(),
+})
 
 const create = response => Promise.resolve({
   json: () => Promise.resolve(response.json),

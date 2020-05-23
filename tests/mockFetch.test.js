@@ -501,7 +501,34 @@ it('should mock the same request multiple times responding differently', async (
   expect(secondResponse.status).toBe(500)
 })
 
-// it('should mock a default response including empty text() & blob())
+it('should mock a default response including empty text() & blob()', async () => {
+  http('http://my.host/')
+    .get('my-resource-path/1/file.txt')
+    .text(new File(
+      [ 'the content of my text file' ],
+      'file.txt',
+      { type: 'text/plain' }
+    ))
+    .get('my-resource-path/1/file.pdf')
+    .blob(new Blob(
+      [ 'the content of my pdf file' ],
+      { type : 'application/pdf' }
+    ))
+
+  const firstTextFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
+  const textFileContent = await readFileAsync(firstTextFile)
+  const secondTextFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
+  const firstPDFFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
+  const pdfFileContent = await readFileAsync(firstPDFFile)
+  const secondPDFFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
+
+  expect(firstTextFile.name).toBe('file.txt')
+  expect(textFileContent).toBe('the content of my text file')
+  expect(secondTextFile).not.toBeDefined()
+  expect(pdfFileContent).toBe('the content of my pdf file')
+  expect(secondPDFFile).not.toBeDefined()
+})
+
 // it('should have set a default host')
 // it('should mock a request failing because of network issues')
 
