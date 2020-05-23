@@ -511,16 +511,18 @@ it('should mock a default response including empty json() & text() & blob()', as
   expect(pdfFile).not.toBeDefined()
 })
 
-it('should mock a default response including empty headers', async () => {
+it('should mock a default response including default values', async () => {
   const response = await fetch('http://my.host/my-resource-path/1/file.json')
 
   expect(response.headers).toBeDefined()
   expect(() => response.headers.get('X-Not-Existing-Header')).not.toThrow()
+  expect(response.status).toBe(200)
+  expect(response.ok).toBeTruthy()
 })
 
+// it('should mock a fetch call when using the Request API', () => {
 // it('should have set a default host')
 // it('should have set a default headers')
 // it('should mock a request failing because of network issues')
 
-// what about headers being passed by doing new Headers
 // what about passing a Request object as firsts fetch param instead of a string url
