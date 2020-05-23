@@ -501,15 +501,25 @@ it('should mock the same request multiple times responding differently', async (
   expect(secondResponse.status).toBe(500)
 })
 
-it('should mock a default response including empty text() & blob()', async () => {
+it('should mock a default response including empty json() & text() & blob()', async () => {
+  const jsonFile = await (await fetch('http://my.host/my-resource-path/1/file.json')).json()
   const textFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
   const pdfFile = await (await fetch('http://my.host/my-resource-path/1/file.pdf')).blob()
 
+  expect(jsonFile).not.toBeDefined()
   expect(textFile).not.toBeDefined()
   expect(pdfFile).not.toBeDefined()
 })
 
+it('should mock a default response including empty headers', async () => {
+  const response = await fetch('http://my.host/my-resource-path/1/file.json')
+
+  expect(response.headers).toBeDefined()
+  expect(() => response.headers.get('X-Not-Existing-Header')).not.toThrow()
+})
+
 // it('should have set a default host')
+// it('should have set a default headers')
 // it('should mock a request failing because of network issues')
 
 // what about headers being passed by doing new Headers

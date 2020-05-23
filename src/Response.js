@@ -2,6 +2,7 @@ const DEFAULT = Promise.resolve({
   json: () => Promise.resolve(),
   text: () => Promise.resolve(),
   blob: () => Promise.resolve(),
+  headers: new Headers(),
 })
 
 const create = response => Promise.resolve({
