@@ -1,5 +1,6 @@
 import { Response } from './Response'
 import { Mocks } from './Mocks'
+import { getConfig } from './config'
 
 const HTTP_METHODS = {
   GET: 'GET',
@@ -10,6 +11,9 @@ const HTTP_METHODS = {
 }
 
 const http = options => {
+  if (!options) {
+    return http({ request: { host: getConfig().host } })
+  }
   const isHost = !options.request && typeof options === 'string'
   if (isHost) {
     return http({ request: { host: options } })

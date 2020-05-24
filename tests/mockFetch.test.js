@@ -1,4 +1,4 @@
-import { http } from '../src'
+import { http, setDefaultHost } from '../src'
 import { readFileAsync } from './helpers'
 
 it('should mock a json response body', async () => {
@@ -530,7 +530,6 @@ it('should mock a fetch call when using the Request API', async () => {
       res.json({ name: 'David' })
     )
 
-  const request = new Request('http://my.host/my-resource-path/1/')
   const firstResponse = await (await fetch(new Request('http://my.host/my-resource-path/1/'))).json()
   const secondResponse = await (await fetch(new Request('http://my.host/my-resource-path/2/'))).json()
 
@@ -538,8 +537,19 @@ it('should mock a fetch call when using the Request API', async () => {
   expect(secondResponse).toEqual({ name: 'David' })
 })
 
-// it('should have set a default host')
-// it('should have set a default headers')
+it('should have set a default host', async () => {
+  setDefaultHost('http://my.host/')
+  http()
+    .get('my-resource-path/1/')
+    .json([ 1, 2, 3])
+
+  const response = await (await fetch('http://my.host/my-resource-path/1/')).json()
+
+  expect(response).toEqual([ 1, 2, 3])
+  setDefaultHost(undefined)
+})
+
+// it('should have set a default response headers')
 // it('should mock a request failing because of network issues')
 
 // use Proxy API instead of jest.fn().mockImplementation so that we can remove jest peer dependency
