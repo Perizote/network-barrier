@@ -1,2 +1,2 @@
 export { http } from './mockFetch'
-export { setDefaultHost, getConfig } from './config'
+export { setDefaultHost, setDefaultHeaders, getConfig } from './config'

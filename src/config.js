@@ -7,6 +7,13 @@ function setDefaultHost(host) {
   }
 }
 
+function setDefaultHeaders(headers) {
+  config = {
+    ...config,
+    headers,
+  }
+}
+
 const getConfig = () => ({ ...config })
 
-export { setDefaultHost, getConfig }
+export { setDefaultHost, setDefaultHeaders, getConfig }

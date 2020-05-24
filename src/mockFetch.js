@@ -106,12 +106,12 @@ function findMatchingResponse(request, requestOptions) {
   const mockedRequest = { ...requestOptions, url }
 
   if (!Mocks.has(mockedRequest)) {
-    return Response.DEFAULT
+    return Response.createDefault()
   }
 
   const response = Mocks.get(mockedRequest)
   if (response.times === 0) {
-    return Response.DEFAULT
+    return Response.createDefault()
   }
 
   Mocks.add(mockedRequest, { ...response, times: response.times - 1 })

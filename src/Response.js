@@ -1,9 +1,11 @@
-const DEFAULT = Promise.resolve({
+import { getConfig } from './config'
+
+const createDefault = () => Promise.resolve({
   json: () => Promise.resolve(),
   text: () => Promise.resolve(),
   blob: () => Promise.resolve(),
   status: 200,
-  headers: new Headers(),
+  headers: new Headers(getConfig().headers),
   ok: true,
 })
 
@@ -12,10 +14,13 @@ const create = response => Promise.resolve({
   blob: () => Promise.resolve(response.blob),
   text: () => Promise.resolve(response.text),
   status: response.status,
-  headers: new Headers(response.headers),
+  headers: new Headers({
+    ...getConfig().headers,
+    ...response.headers,
+  }),
   ok: response.status >= 200 && response.status <= 299,
 })
 
-const Response = { DEFAULT, create }
+const Response = { createDefault, create }
 
 export { Response }

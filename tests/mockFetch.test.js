@@ -1,4 +1,4 @@
-import { http, setDefaultHost } from '../src'
+import { http, setDefaultHost, setDefaultHeaders } from '../src'
 import { readFileAsync } from './helpers'
 
 it('should mock a json response body', async () => {
@@ -549,7 +549,20 @@ it('should have set a default host', async () => {
   setDefaultHost(undefined)
 })
 
-// it('should have set a default response headers')
+it('should have set a default response headers', async () => {
+  setDefaultHeaders({ 'X-Default-Header': 'a default header' })
+  http('http://my.host/')
+    .get('my-resource-path/1/')
+    .json()
+
+  const response = await fetch('http://my.host/my-resource-path/1/')
+  const responseWithDefaultValues = await fetch('http://my.host/my-resource-path/1/')
+
+  expect(response.headers.get('X-Default-Header')).toBe('a default header')
+  expect(responseWithDefaultValues.headers.get('X-Default-Header')).toBe('a default header')
+  setDefaultHeaders(undefined)
+})
+
 // it('should mock a request failing because of network issues')
 
 // use Proxy API instead of jest.fn().mockImplementation so that we can remove jest peer dependency
