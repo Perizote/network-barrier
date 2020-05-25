@@ -445,6 +445,16 @@ it('should mock a request including its query string params', async () => {
   expect(responseWithDescendingOrder).toEqual([ 3, 2, 1 ])
 })
 
+it('should mock requests with relative host', async () => {
+  http('/a/relative/host/')
+    .get('my-resource-path/')
+    .json([ 1, 2, 3 ])
+
+  const response = await (await fetch('/a/relative/host/my-resource-path/')).json()
+
+  expect(response).toEqual([ 1, 2, 3 ])
+})
+
 it('should mock requests by passing a url wildcard', async () => {
   http('http://my.host/')
     .get('my-resource-path/*')

@@ -32,11 +32,14 @@ function getMockKeyMatchingRequest(request) {
 
 function keyIdentifiesRequest(request, key) {
   const { url, method = 'GET' } = request
-  const { origin, pathname } = new URL(url)
-
   if (key.method !== method) return false
 
-  return compare(`${ origin }${ pathname }`, key.url)
+  try {
+    const { origin, pathname } = new URL(url)
+    return compare(`${ origin }${ pathname }`, key.url)
+  } catch (error) {
+    return compare(url, key.url)
+  }
 }
 
 const Mocks = { clear, get, add, has }
