@@ -29,36 +29,36 @@ const barrier = options => {
     headers: headers => barrier({ ...options, response: { ...options.response, headers } }),
     times: times => barrier({ ...options, response: { ...options.response, times } }),
     json: json => {
-      const { request, response } = options
-
-      Mocks.add(request, { ...response, json })
-      window.fetch = jest.fn().mockImplementation(findMatchingResponse)
+      Mocks.add(options.request, { ...options.response, json })
+      window.fetch = getFetchHandler()
       return barrier({ ...options, response: { ...options.response, json } })
     },
     blob: blob => {
-      const { request, response } = options
-
-      Mocks.add(request, { ...response, blob })
-      window.fetch = jest.fn().mockImplementation(findMatchingResponse)
+      Mocks.add(options.request, { ...options.response, blob })
+      window.fetch = getFetchHandler()
       return barrier({ ...options, response: { ...options.response, blob } })
     },
     text: text => {
-      const { request, response } = options
-
-      Mocks.add(request, { ...response, text })
-      window.fetch = jest.fn().mockImplementation(findMatchingResponse)
+      Mocks.add(options.request, { ...options.response, text })
+      window.fetch = getFetchHandler()
       return barrier({ ...options, response: { ...options.response, text } })
     },
     respond(responseCreator) {
-      window.fetch = jest.fn().mockImplementation(async (request, requestOptions) => {
-        const url = typeof request === 'string' ? request : request.url
-        const response = responseCreator(getReq(url, requestOptions), getRes(options.response))
-        Mocks.add(options.request, response)
-        return findMatchingResponse(url, requestOptions)
+      window.fetch = new Proxy(window.fetch, {
+        apply(target, that, [ request, requestOptions ]) {
+          const url = typeof request === 'string' ? request : request.url
+          const response = responseCreator(getReq(url, requestOptions), getRes(options.response))
+          Mocks.add(options.request, response)
+          return findMatchingResponse(url, requestOptions)
+        },
       })
     }
   }
 }
+
+const getFetchHandler = () => new Proxy(window.fetch, {
+  apply: (target, that, [ request, requestOptions ]) => findMatchingResponse(request, requestOptions),
+})
 
 const getReq = (url, requestOptions = {}) => ({
   body: getRequestBody(requestOptions),
