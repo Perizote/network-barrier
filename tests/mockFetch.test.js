@@ -186,7 +186,7 @@ it('should mock the same request one single time by default', async () => {
 it('should mock the response of a request', async () => {
   http('http://my.host/')
     .post('my-resource-path/')
-    .response((req, res) =>
+    .respond((req, res) =>
       res
         .status(400)
         .headers({ 'X-Custom-Header': 'custom header value' })
@@ -205,7 +205,7 @@ it('should mock the response of a request', async () => {
 it('should mock the response of a request by using the default values', async () => {
   http('http://my.host/')
     .post('my-resource-path/')
-    .response((req, res) => res.json())
+    .respond((req, res) => res.json())
 
     const response = await fetch('http://my.host/my-resource-path/', { method: 'POST' })
     const responseBody = await (response).json()
@@ -219,7 +219,7 @@ it('should mock the same request multiple times', async () => {
   http('http://my.host/')
     .get('my-resource-path/1/')
     .times(2)
-    .response((req, res) =>
+    .respond((req, res) =>
       res.json({
         id: 1,
         result: [],
@@ -243,7 +243,7 @@ it('should mock a request including its body params', async () => {
   http('http://my.host/')
     .post('my-resource-path/')
     .times(2)
-    .response((req, res) => {
+    .respond((req, res) => {
       if (req.body.isAuth) {
         return res.json({
           id: 1,
@@ -272,7 +272,7 @@ it('should mock a request including its headers', async () => {
   http('http://my.host/')
     .post('my-resource-path/')
     .times(2)
-    .response((req, res) => {
+    .respond((req, res) => {
       if (req.headers.Authorization === 'Basic mytoken') {
         return res.json({
           id: 1,
@@ -362,7 +362,7 @@ it('should mock a blob response body', async () => {
 it('should mock a blob response body of a request', async () => {
   http('http://my.host/')
     .get('my-resource-path/1/file.pdf')
-    .response((req, res) =>
+    .respond((req, res) =>
       res.blob(new Blob(
         [ 'the content of my pdf file' ],
         { type : 'application/pdf' }
@@ -395,7 +395,7 @@ it('should mock a text response body', async () => {
 it('should mock a text response body of a request', async () => {
   http('http://my.host/')
     .get('my-resource-path/1/file.txt')
-    .response((req, res) =>
+    .respond((req, res) =>
       res.text(new File(
         [ 'the content of my text file' ],
         'file.txt',
@@ -430,7 +430,7 @@ it('should mock a request including its query string params', async () => {
   http('http://my.host/')
     .get('my-resource-path/')
     .times(2)
-    .response((req, res) => {
+    .respond((req, res) => {
       if (req.queryParams.order === 'desc') {
         return res.json([ 3, 2, 1 ])
       }
@@ -500,7 +500,7 @@ it('should mock the same request multiple times responding differently', async (
     .json()
   const firstResponse =  await fetch('http://my.host/my-resource-path/1/')
 
-  network.response((req, res) =>
+  network.respond((req, res) =>
     res
       .status(500)
       .json()
@@ -536,7 +536,7 @@ it('should mock a fetch call when using the Request API', async () => {
     .json({ name: 'Sergio' })
   http('http://my.host/')
     .get('my-resource-path/2/')
-    .response((req, res) =>
+    .respond((req, res) =>
       res.json({ name: 'David' })
     )
 

@@ -49,7 +49,7 @@ const http = options => {
       window.fetch = jest.fn().mockImplementation(findMatchingResponse)
       return http({ ...options, response: { ...options.response, text } })
     },
-    response(responseCreator) {
+    respond(responseCreator) {
       window.fetch = jest.fn().mockImplementation(async (request, requestOptions) => {
         const url = typeof request === 'string' ? request : request.url
         const response = responseCreator(getReq(url, requestOptions), getRes(options.response))
