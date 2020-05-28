@@ -20,9 +20,6 @@
     "jest": "24.8.0",
     "babel-jest": "^24.8.0"
   },
-  "peerDependencies": {
-    "jest": "*"
-  },
   "keywords": [],
   "babel": {
     "presets": [
