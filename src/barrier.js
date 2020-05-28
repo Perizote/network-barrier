@@ -56,7 +56,7 @@ const barrier = options => {
   }
 }
 
-const getFetchHandler = () => new Proxy(window.fetch, {
+const getFetchHandler = () => new Proxy(new Function(), {
   apply: (target, that, [ request, requestOptions ]) => findMatchingResponse(request, requestOptions),
 })
 
