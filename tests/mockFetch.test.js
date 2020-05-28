@@ -1,8 +1,8 @@
-import { http, setDefaultHost, setDefaultHeaders } from '../src'
+import { barrier, setDefaultHost, setDefaultHeaders } from '../src'
 import { readFileAsync } from './helpers'
 
 it('should mock a json response body', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json({
       id: 1,
@@ -18,7 +18,7 @@ it('should mock a json response body', async () => {
 })
 
 it('should mock response headers', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .headers({ 'X-Custom-Header': 'a custom header' })
     .json()
@@ -29,7 +29,7 @@ it('should mock response headers', async () => {
 })
 
 it('should mock an ok status by default', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json()
 
@@ -39,7 +39,7 @@ it('should mock an ok status by default', async () => {
 })
 
 it('should mock a bad request status', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .status(400)
     .json()
@@ -50,11 +50,11 @@ it('should mock a bad request status', async () => {
 })
 
 it('should mock a request which response includes a positive ok', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .status(200)
     .json()
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/2/')
     .status(299)
     .json()
@@ -67,11 +67,11 @@ it('should mock a request which response includes a positive ok', async () => {
 })
 
 it('should mock a request which response includes a negative ok', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .status(400)
     .json()
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/2/')
     .status(500)
     .json()
@@ -84,7 +84,7 @@ it('should mock a request which response includes a negative ok', async () => {
 })
 
 it('should not be mocking a request when its url does not match', async () => {
-  http('http://not-my.host/')
+  barrier('http://not-my.host/')
     .get('not-my-path/')
     .json({
       id: 1,
@@ -97,13 +97,13 @@ it('should not be mocking a request when its url does not match', async () => {
 })
 
 it('should mock different requests', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json({
       id: 1,
       result: [],
     })
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-other-resource-path/2/')
     .status(400)
     .json()
@@ -123,13 +123,13 @@ it('should mock different requests', async () => {
 })
 
 it('should mock the same request url but using different http method', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json({
       id: 1,
       result: [],
     })
-  http('http://my.host/')
+  barrier('http://my.host/')
     .post('my-resource-path/1/')
     .json()
 
@@ -144,7 +144,7 @@ it('should mock the same request url but using different http method', async () 
 })
 
 it('should mock the same request multiple times', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .times(2)
     .json({
@@ -166,7 +166,7 @@ it('should mock the same request multiple times', async () => {
 })
 
 it('should mock the same request one single time by default', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json({
       id: 1,
@@ -184,7 +184,7 @@ it('should mock the same request one single time by default', async () => {
 })
 
 it('should mock the response of a request', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .post('my-resource-path/')
     .respond((req, res) =>
       res
@@ -203,7 +203,7 @@ it('should mock the response of a request', async () => {
 })
 
 it('should mock the response of a request by using the default values', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .post('my-resource-path/')
     .respond((req, res) => res.json())
 
@@ -216,7 +216,7 @@ it('should mock the response of a request by using the default values', async ()
 })
 
 it('should mock the same request multiple times', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .times(2)
     .respond((req, res) =>
@@ -240,7 +240,7 @@ it('should mock the same request multiple times', async () => {
 })
 
 it('should mock a request including its body params', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .post('my-resource-path/')
     .times(2)
     .respond((req, res) => {
@@ -269,7 +269,7 @@ it('should mock a request including its body params', async () => {
 })
 
 it('should mock a request including its headers', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .post('my-resource-path/')
     .times(2)
     .respond((req, res) => {
@@ -298,7 +298,7 @@ it('should mock a request including its headers', async () => {
 })
 
 it('should mock a put request', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .put('my-resource-path/1/')
     .json({
       id: 1,
@@ -314,7 +314,7 @@ it('should mock a put request', async () => {
 })
 
 it('should mock a patch request', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .patch('my-resource-path/1/')
     .json({
       id: 1,
@@ -330,7 +330,7 @@ it('should mock a patch request', async () => {
 })
 
 it('should mock a delete request', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .delete('my-resource-path/1/')
     .json({
       id: 1,
@@ -346,7 +346,7 @@ it('should mock a delete request', async () => {
 })
 
 it('should mock a blob response body', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/file.pdf')
     .blob(new Blob(
       [ 'the content of my pdf file' ],
@@ -360,7 +360,7 @@ it('should mock a blob response body', async () => {
 })
 
 it('should mock a blob response body of a request', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/file.pdf')
     .respond((req, res) =>
       res.blob(new Blob(
@@ -376,14 +376,13 @@ it('should mock a blob response body of a request', async () => {
 })
 
 it('should mock a text response body', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/file.txt')
     .text(new File(
       [ 'the content of my text file' ],
       'file.txt',
       { type: 'text/plain' }
     ))
-
 
   const textFile = await (await fetch('http://my.host/my-resource-path/1/file.txt')).text()
   const fileContent = await readFileAsync(textFile)
@@ -393,7 +392,7 @@ it('should mock a text response body', async () => {
 })
 
 it('should mock a text response body of a request', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/file.txt')
     .respond((req, res) =>
       res.text(new File(
@@ -411,7 +410,7 @@ it('should mock a text response body of a request', async () => {
 })
 
 it('should ignore query string params when it comes to find matching requests', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json({
       id: 1,
@@ -427,7 +426,7 @@ it('should ignore query string params when it comes to find matching requests', 
 })
 
 it('should mock a request including its query string params', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/')
     .times(2)
     .respond((req, res) => {
@@ -446,7 +445,7 @@ it('should mock a request including its query string params', async () => {
 })
 
 it('should mock requests with relative host', async () => {
-  http('/a/relative/host/')
+  barrier('/a/relative/host/')
     .get('my-resource-path/')
     .json([ 1, 2, 3 ])
 
@@ -456,7 +455,7 @@ it('should mock requests with relative host', async () => {
 })
 
 it('should mock requests by passing a url wildcard', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/*')
     .json({ name: 'Sergio' })
 
@@ -466,7 +465,7 @@ it('should mock requests by passing a url wildcard', async () => {
 })
 
 it('should mock different requests by chaining them', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/file.json')
     .json({ content: 'the content of my json file' })
     .get('my-resource-path/1/file.txt')
@@ -494,7 +493,7 @@ it('should mock different requests by chaining them', async () => {
 })
 
 it('should mock the same request multiple times responding differently', async () => {
-  const network = http('http://my.host/')
+  const network = barrier('http://my.host/')
     .get('my-resource-path/1/')
     .status(400)
     .json()
@@ -531,10 +530,10 @@ it('should mock a default response including default values', async () => {
 })
 
 it('should mock a fetch call when using the Request API', async () => {
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json({ name: 'Sergio' })
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/2/')
     .respond((req, res) =>
       res.json({ name: 'David' })
@@ -549,7 +548,7 @@ it('should mock a fetch call when using the Request API', async () => {
 
 it('should have set a default host', async () => {
   setDefaultHost('http://my.host/')
-  http()
+  barrier()
     .get('my-resource-path/1/')
     .json([ 1, 2, 3])
 
@@ -561,7 +560,7 @@ it('should have set a default host', async () => {
 
 it('should have set a default response headers', async () => {
   setDefaultHeaders({ 'X-Default-Header': 'a default header' })
-  http('http://my.host/')
+  barrier('http://my.host/')
     .get('my-resource-path/1/')
     .json()
 
@@ -577,4 +576,4 @@ it('should have set a default response headers', async () => {
 
 // use Proxy API instead of jest.fn().mockImplementation so that we can remove jest peer dependency
 // use Deno instead of Node in order to have native fetch support so that we can get rid of node-fetch dependency and polyfills
-// find a better name (http sucks)
+// find a better name
