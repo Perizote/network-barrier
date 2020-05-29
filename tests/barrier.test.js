@@ -571,9 +571,3 @@ it('should have set a default response headers', async () => {
   expect(responseWithDefaultValues.headers.get('X-Default-Header')).toBe('a default header')
   setDefaultHeaders(undefined)
 })
-
-// it('should mock a request failing because of network issues')
-
-// use Proxy API instead of jest.fn().mockImplementation so that we can remove jest peer dependency
-// use Deno instead of Node in order to have native fetch support so that we can get rid of node-fetch dependency and polyfills
-// find a better name
