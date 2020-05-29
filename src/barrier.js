@@ -118,6 +118,4 @@ function findMatchingResponse(request, requestOptions) {
   return Response.create(response)
 }
 
-afterEach(Mocks.clear)
-
 export { barrier }
