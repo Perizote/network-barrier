@@ -44,7 +44,7 @@ const barrier = options => {
       return barrier({ ...options, response: { ...options.response, text } })
     },
     respond(responseCreator) {
-      window.fetch = new Proxy(window.fetch, {
+      window.fetch = new Proxy(new Function(), {
         apply(target, that, [ request, requestOptions ]) {
           const url = typeof request === 'string' ? request : request.url
           const response = responseCreator(getReq(url, requestOptions), getRes(options.response))
