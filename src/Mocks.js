@@ -1,4 +1,4 @@
-import { compare } from './compare'
+import { compare } from 'compare-path-wildcard'
 
 let list = new Map()
 
