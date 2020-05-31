@@ -10,12 +10,19 @@ function get(request) {
 }
 
 function add(request, response) {
-  const { url, host, path, method = 'GET' } = request
-  const { json, blob, text, status = 200, headers, times = 1 } = response
-  const uri = url ? url : `${ host }${ path }`
-
-  list.set(JSON.stringify({ url: uri, method }), { json, blob, text, status, headers, times })
+  list.set(generateKey(request), fillResponseDefaults(response))
 }
+
+function generateKey({ url, host, path, method = 'GET' }) {
+  try {
+    const { origin, pathname } = new URL(url)
+    return JSON.stringify({ url: `${ origin }${ pathname }`, method })
+  } catch {
+    return JSON.stringify({ url: `${ host + path }`, method })
+  }
+}
+
+const fillResponseDefaults = ({ status = 200, times = 1, ...restOfResponse }) => ({ status, times, ...restOfResponse })
 
 function has(request) {
   const key = getMockKeyMatchingRequest(request)
@@ -37,7 +44,7 @@ function keyIdentifiesRequest(request, key) {
   try {
     const { origin, pathname } = new URL(url)
     return compare(`${ origin }${ pathname }`, key.url)
-  } catch (error) {
+  } catch {
     return compare(url, key.url)
   }
 }

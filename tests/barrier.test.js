@@ -444,6 +444,21 @@ it('should mock a request including its query string params', async () => {
   expect(responseWithDescendingOrder).toEqual([ 3, 2, 1 ])
 })
 
+it('should mock the same request with query params multiple times', async () => {
+  barrier('http://my.host/')
+    .get('my-resource-path/1/')
+	  .times(2)
+    .json([ 1, 2, 3 ])
+
+  const firstResponse = await (await fetch('http://my.host/my-resource-path/1/?order=desc')).json()
+  const secondResponse = await (await fetch('http://my.host/my-resource-path/1/')).json()
+  const thirdResponse = await (await fetch('http://my.host/my-resource-path/1/')).json()
+
+  expect(firstResponse).toEqual([ 1, 2, 3 ])
+  expect(secondResponse).toEqual([ 1, 2, 3 ])
+  expect(thirdResponse).toBeUndefined()
+})
+
 it('should mock requests with relative host', async () => {
   barrier('/a/relative/host/')
     .get('my-resource-path/')
