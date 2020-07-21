@@ -1,7 +1,7 @@
 {
   "name": "barrier",
   "version": "0.0.1",
-  "description": "",
+  "description": "Simulate network responses by intercepting network responses while using an intuitive and semantic API",
   "main": "index.js",
   "scripts": {
     "test": "jest --ci --coverage --config config/jest.config.json",
@@ -21,7 +21,21 @@
     "jest": "24.8.0",
     "babel-jest": "^24.8.0"
   },
-  "keywords": ["network", "integration", "test", "testing", "javascript", "js", "fetch", "proxy", "mock", "simulate"],
+  "keywords": [
+    "network",
+    "integration",
+    "test",
+    "testing",
+    "javascript",
+    "js",
+    "fetch",
+    "proxy",
+    "mock",
+    "simulate",
+    "semantic",
+    "request",
+    "response"
+  ],
   "babel": {
     "presets": [
       "@babel/env"
