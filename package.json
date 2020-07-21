@@ -21,7 +21,7 @@
     "jest": "24.8.0",
     "babel-jest": "^24.8.0"
   },
-  "keywords": [],
+  "keywords": ["network", "integration", "test", "testing", "javascript", "js", "fetch", "proxy", "mock", "simulate"],
   "babel": {
     "presets": [
       "@babel/env"
