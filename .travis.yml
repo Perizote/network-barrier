@@ -2,14 +2,14 @@ language: node_js
 node_js:
 - 10
 before_deploy:
-  - rm -rf dist
-  - babel src --out-dir dist
-  - npm version --no-git-tag-version --allow-same-version ${TRAVIS_TAG}
+- rm -rf dist
+- babel src --out-dir dist
+- npm version --no-git-tag-version --allow-same-version ${TRAVIS_TAG}
 deploy:
   provider: npm
   email: sergio.perizote@gmail.com
   api_key:
-    secure: TPzO8Zy6IBNhwdxm2mUix1aERp9pkNjnC8OYyHEwU9mO8L3wgmdmrU/qB7dmDn41XmBW8GF7D2q0bNEUHO6s8vwKL/RfWNvopbyLQCWk2ZmqdtMrqUoLtAk3YYYNd/Ud7loUCLQiwDXpWvqPmNSn5GdTehKodWXNwGWpic+uK+gN9CohkWYd0xeBRPVWuxcPLv35TSpKb8NzzaLtkj73/pwWUjSMDcqIjb3FIcwYf5tEDDlHRC5QctQ9SRibq4fdhABGuZI98JDGE1pOqlSXNvPMpEHuMSreABI1s3RSeZBOoyVO/rgu55+T/iwM3NK8RuXJLdaDcbpQOYgD2vGErMev7LqaCYp8iuxP3Qmd+vpn+WwaCGI5Wrt4iXvtfr//v4B5dbF6ggtoROUS604N2g4Sdd/6TSvdYBDJc0yB3iuJVLY63NjRhMJ7U0sdFBrHKC0GrVk836GmtDecNweINTsh1W18CYabeLQPtCsnZYkC9r81Kk8Q165SZlvRw6hltMs7EsmawE+IQx9XiQ1ks+bt6wiB0JE/weZJB9T6LvN0VZF0kygqUWMjAa9xKDrHY1ptx2hrfBo056LIgBOgBBRdkjZVuUq/3L6AOXbeniWXMnDgF90inpGHjqUU9NUOv/npVKoc0VfhufHw9+zWsWFAeLr+UKaebTS19y9ccis=
+    secure: OECx9jCmt+G3S2FuiVHSH0aHxq8IYqzBJe0yytKzkHw5AuhVhfY6ua/LvApTHZ8HGjsktPm9cx845b4gR5mVPzDDyyPUv5lOvLm4ZgjMHHa+sD/n+c8lyGV11fncunzpigY8cYDjg5T/6kG4QEOGT92DG7nHJ5lpY64Vu3Tzeaxr3f0C4tKKyfnehyCIt0C0vSbMxu94+s6dlQu9uKnYmfNR+VdkdCwclkvXDmihprOH4bU+GWQq8x9fDuyNxnhvvntRU3M+tSHB9oUeVaNm4e8J5ZV60ZCPWgBlPNfwbN6yJ1SPZCA85Q8PZtTzdiOs30eqogzQoCLFRMfjDl4245OeSNiz5LV3RA4wWhv6emfedagIi2kf+gm2G5ZqjmmtKyn/215CDTPG6IeKoM+IKL/GfBUxsg3PGymFMFwSe39Pl37S9eiWvLqvXUZUs3cIF2246h1fBKdmSjd0mRKBpM/e8TwI9hc8eooPmGG1ViPp78TJOVq4JJmCJoSvkTQ15OuM6BEeyYK1JDW1+HxgUl9JaFvsbOfc0rG0zNOHixjimWem05eJZx+ysNRIQlyTQ9ezDD1CIW9wpuQTU2uzCBt3CHcKJkgoak20ozyyi9cygFH38b9IA2Z1sU9IFGVOHkLYyiwD3FQMFIDF9Vl3JDexCmO/Iqj+yRNAvuwsjEE=
   on:
     tags: true
     repo: Perizote/barrier
