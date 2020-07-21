@@ -4,7 +4,7 @@ node_js:
 before_deploy:
   - rm -rf dist
   - babel src --out-dir dist
-  - npm version --no-git-tag-version ${TRAVIS_TAG}
+  - npm version --no-git-tag-version --allow-same-version ${TRAVIS_TAG}
 deploy:
   provider: npm
   email: sergio.perizote@gmail.com
