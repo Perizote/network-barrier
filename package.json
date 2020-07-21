@@ -2,7 +2,7 @@
   "name": "barrier",
   "version": "0.0.1",
   "description": "Simulate network responses by intercepting network responses while using an intuitive and semantic API",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest --ci --coverage --config config/jest.config.json",
     "test:watch": "jest --watchAll --config config/jest.config.json"
@@ -21,6 +21,7 @@
     "jest": "24.8.0",
     "babel-jest": "^24.8.0"
   },
+  "files": ["dist"],
   "keywords": [
     "network",
     "integration",

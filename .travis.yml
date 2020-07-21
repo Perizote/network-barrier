@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+- 10
+before_deploy:
+  - rm -rf dist
+  - babel src --out-dir dist
+  - npm version --no-git-tag-version ${TRAVIS_TAG}
+deploy:
+  provider: npm
+  email: sergio.perizote@gmail.com
+  api_key:
+    secure: TPzO8Zy6IBNhwdxm2mUix1aERp9pkNjnC8OYyHEwU9mO8L3wgmdmrU/qB7dmDn41XmBW8GF7D2q0bNEUHO6s8vwKL/RfWNvopbyLQCWk2ZmqdtMrqUoLtAk3YYYNd/Ud7loUCLQiwDXpWvqPmNSn5GdTehKodWXNwGWpic+uK+gN9CohkWYd0xeBRPVWuxcPLv35TSpKb8NzzaLtkj73/pwWUjSMDcqIjb3FIcwYf5tEDDlHRC5QctQ9SRibq4fdhABGuZI98JDGE1pOqlSXNvPMpEHuMSreABI1s3RSeZBOoyVO/rgu55+T/iwM3NK8RuXJLdaDcbpQOYgD2vGErMev7LqaCYp8iuxP3Qmd+vpn+WwaCGI5Wrt4iXvtfr//v4B5dbF6ggtoROUS604N2g4Sdd/6TSvdYBDJc0yB3iuJVLY63NjRhMJ7U0sdFBrHKC0GrVk836GmtDecNweINTsh1W18CYabeLQPtCsnZYkC9r81Kk8Q165SZlvRw6hltMs7EsmawE+IQx9XiQ1ks+bt6wiB0JE/weZJB9T6LvN0VZF0kygqUWMjAa9xKDrHY1ptx2hrfBo056LIgBOgBBRdkjZVuUq/3L6AOXbeniWXMnDgF90inpGHjqUU9NUOv/npVKoc0VfhufHw9+zWsWFAeLr+UKaebTS19y9ccis=
+  on:
+    tags: true
+    repo: Perizote/barrier
+  skip_cleanup: 'true'
