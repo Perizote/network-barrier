@@ -37,6 +37,7 @@
     "request",
     "response"
   ],
+  "license": "MIT",
   "babel": {
     "presets": [
       "@babel/env"
