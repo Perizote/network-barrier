@@ -1,5 +1,5 @@
 {
-  "name": "barrier",
+  "name": "network-barrier",
   "version": "0.0.1",
   "description": "Simulate network responses by intercepting network responses while using an intuitive and semantic API",
   "main": "dist/index.js",
