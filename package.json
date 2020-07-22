@@ -35,9 +35,20 @@
     "simulate",
     "semantic",
     "request",
-    "response"
+    "response",
+    "http"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/Perizote/network-barrier",
+  "bugs": {
+    "url": "https://github.com/Perizote/network-barrier/issues"
+  },
+  "author": {
+    "name": "Sergio Peris Perez",
+    "email": "sergio.perizote@gmail.com",
+    "url": "https://www.linkedin.com/in/sergioperisperez/"
+  },
+  "repository": "github:Perizote/network-barrier",
   "babel": {
     "presets": [
       "@babel/env"
