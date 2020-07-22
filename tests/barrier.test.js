@@ -561,6 +561,23 @@ it('should mock a fetch call when using the Request API', async () => {
   expect(secondResponse).toEqual({ name: 'David' })
 })
 
+it('should mock a fetch post when using the Request API', async () => {
+  barrier('http://my.host/')
+    .post('my-resource-path/1/')
+    .json({ name: 'Sergio' })
+  barrier('http://my.host/')
+    .post('my-resource-path/2/')
+    .respond((req, res) =>
+      res.json({ name: 'David' })
+    )
+
+  const firstResponse = await (await fetch(new Request('http://my.host/my-resource-path/1/', { method: 'POST' }))).json()
+  const secondResponse = await (await fetch(new Request('http://my.host/my-resource-path/2/', { method: 'POST' }))).json()
+
+  expect(firstResponse).toEqual({ name: 'Sergio' })
+  expect(secondResponse).toEqual({ name: 'David' })
+})
+
 it('should have set a default host', async () => {
   setDefaultHost('http://my.host/')
   barrier()

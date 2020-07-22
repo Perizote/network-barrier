@@ -46,9 +46,14 @@ const barrier = options => {
     respond(responseCreator) {
       window.fetch = new Proxy(new Function(), {
         apply(target, that, [ request, requestOptions ]) {
-          const url = typeof request === 'string' ? request : request.url
+          const url = request instanceof Request ? request.url : request
           const response = responseCreator(getReq(url, requestOptions), getRes(options.response))
           Mocks.add(options.request, response)
+
+          if (request instanceof Request) {
+            return findMatchingResponse(url, request)
+          }
+
           return findMatchingResponse(url, requestOptions)
         },
       })
@@ -57,7 +62,13 @@ const barrier = options => {
 }
 
 const getFetchHandler = () => new Proxy(new Function(), {
-  apply: (target, that, [ request, requestOptions ]) => findMatchingResponse(request, requestOptions),
+  apply: (target, that, [ request, requestOptions ]) => {
+    if (request instanceof Request) {
+      return findMatchingResponse(request.url, request)
+    }
+
+    return findMatchingResponse(request, requestOptions)
+  },
 })
 
 const getReq = (url, requestOptions = {}) => ({
@@ -101,9 +112,11 @@ const getRes = response => ({
   text: text => ({ ...response, text }),
 })
 
-function findMatchingResponse(request, requestOptions) {
-  const url = typeof request === 'string' ? request : request.url
-  const mockedRequest = { ...requestOptions, url }
+function findMatchingResponse(url, requestOptions = { method: 'GET' }) {
+  const mockedRequest = {
+    method: requestOptions.method,
+    url,
+  }
 
   if (!Mocks.has(mockedRequest)) {
     return Response.createDefault()
