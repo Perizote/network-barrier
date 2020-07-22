@@ -1,3 +1,3 @@
 export { barrier } from './barrier'
-export { setDefaultHost, setDefaultHeaders, getConfig } from './config'
+export { setDefaultHost, setDefaultHeaders } from './config'
 export { Mocks } from './Mocks'
