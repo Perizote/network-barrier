@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "compare-path-wildcard": "0.0.3",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^3.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.0",
